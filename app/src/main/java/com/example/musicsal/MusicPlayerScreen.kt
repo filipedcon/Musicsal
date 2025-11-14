@@ -118,7 +118,7 @@ fun MusicControls() {
 @Composable
 fun AlbumArtWithProgress(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier.size(300.dp),
+        modifier = modifier.size(270.dp),
         contentAlignment = Alignment.Center
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -133,13 +133,14 @@ fun AlbumArtWithProgress(modifier: Modifier = Modifier) {
             drawArc(
                 color = Color.Red,
                 startAngle = -90f,
-                sweepAngle = 90f, 
+                sweepAngle = 90f,
                 useCenter = false,
                 style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
             )
         }
         Box(
             modifier = Modifier
+                //colocar um pouco de espaço para direita
                 .fillMaxSize()
                 .padding(12.dp)
                 .clip(CircleShape)
