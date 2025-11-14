@@ -60,10 +60,19 @@ fun MusicsalApp() {
         }
     ) {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Greeting(
-                name = "Android",
-                modifier = Modifier.padding(innerPadding)
-            )
+            when (currentDestination) {
+                AppDestinations.HOME -> Greeting(
+                    name = "Android",
+                    modifier = Modifier.padding(innerPadding)
+                )
+                AppDestinations.FAVORITES -> MusicPlayerScreen(
+                    modifier = Modifier.padding(innerPadding)
+                )
+                AppDestinations.PROFILE -> Greeting(
+                    name = "Profile",
+                    modifier = Modifier.padding(innerPadding)
+                )
+            }
         }
     }
 }
