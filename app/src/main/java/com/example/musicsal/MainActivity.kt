@@ -7,9 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import com.example.musicsal.ui.theme.MusicsalTheme
@@ -47,10 +46,16 @@ fun MusicsalApp() {
             AppDestinations.entries.forEach {
                 item(
                     icon = {
-                        Icon(
-                            it.icon,
-                            contentDescription = it.label
-                        )
+                        when (val icon = it.icon) {
+                            is ImageVector -> Icon(
+                                imageVector = icon,
+                                contentDescription = it.label
+                            )
+                            is Int -> Icon(
+                                painter = painterResource(id = icon),
+                                contentDescription = it.label
+                            )
+                        }
                     },
                     label = { Text(it.label) },
                     selected = it == currentDestination,
@@ -61,15 +66,10 @@ fun MusicsalApp() {
     ) {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             when (currentDestination) {
-                AppDestinations.HOME -> Greeting(
-                    name = "Android",
+                AppDestinations.HOME -> MusicListScreen(
                     modifier = Modifier.padding(innerPadding)
                 )
                 AppDestinations.FAVORITES -> MusicPlayerScreen(
-                    modifier = Modifier.padding(innerPadding)
-                )
-                AppDestinations.PROFILE -> Greeting(
-                    name = "Profile",
                     modifier = Modifier.padding(innerPadding)
                 )
             }
@@ -79,11 +79,10 @@ fun MusicsalApp() {
 
 enum class AppDestinations(
     val label: String,
-    val icon: ImageVector,
+    val icon: Any,
 ) {
-    HOME("Home", Icons.Default.Home),
-    FAVORITES("Favorites", Icons.Default.Favorite),
-    PROFILE("Profile", Icons.Default.AccountBox),
+    HOME("Playlist", R.drawable.playlist),
+    FAVORITES("Player", R.drawable.nota_musical),
 }
 
 @Composable
