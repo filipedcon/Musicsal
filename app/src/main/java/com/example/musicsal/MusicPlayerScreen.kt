@@ -44,7 +44,7 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxSize()
         ) {
             Header()
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(64.dp))
             MusicControls()
             Spacer(modifier = Modifier.weight(1f))
             LyricsSection()
@@ -54,21 +54,21 @@ fun MusicPlayerScreen(modifier: Modifier = Modifier) {
 
 @Composable
 fun Header() {
-    Column(horizontalAlignment = Alignment.Start) {
+    Column(horizontalAlignment = Alignment.Start, modifier = Modifier.padding(top=24.dp)) {
         Text(
             text = "DUSK TILL DOWN",
-            fontSize = 28.sp,
+            fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             color = Color(0xFF003366)
         )
         Text(
             text = "ZAYN ft. Sia",
-            fontSize = 18.sp,
+            fontSize = 22.sp,
             color = Color(0xFF003366)
         )
         Text(
             text = "Kazuya's AirPods Pro",
-            fontSize = 14.sp,
+            fontSize = 18.sp,
             color = Color.Gray
         )
     }
@@ -76,49 +76,49 @@ fun Header() {
 
 @Composable
 fun MusicControls() {
-    Box(modifier = Modifier.fillMaxWidth()) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+    Box(modifier = Modifier
+        .fillMaxWidth()
+        .height(350.dp)) {
+        Surface(
+            shape = RoundedCornerShape(30.dp),
+            color = Color.White.copy(alpha = 0.5f),
+            modifier = Modifier
+                .height(350.dp)
+                .align(Alignment.CenterStart)
         ) {
-            Surface(
-                shape = RoundedCornerShape(30.dp),
-                color = Color.White.copy(alpha = 0.5f),
-                modifier = Modifier.height(300.dp)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceAround,
+                modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.SpaceAround,
-                    modifier = Modifier.padding(vertical = 16.dp, horizontal = 8.dp)
-                ) {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Repeat")
-                    }
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = "Play")
-                    }
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(painterResource(id = R.drawable.baseline_pause_24), contentDescription = "Pause")
-                    }
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(painterResource(id = R.drawable.baseline_skip_previous_24), contentDescription = "Previous")
-                    }
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(Icons.Default.Favorite, contentDescription = "Favorite", tint = Color.Red)
-                    }
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Default.Refresh, contentDescription = "Repeat")
+                }
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(painterResource(id = R.drawable.skip_anterior), contentDescription = "Previous")
+                }
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Default.PlayArrow, contentDescription = "Play")
+                }
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(painterResource(id = R.drawable.skip_next), contentDescription = "Previous")
+                }
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Default.Favorite, contentDescription = "Favorite", tint = Color.Red)
                 }
             }
-
-            Spacer(modifier = Modifier.weight(1f))
         }
-        AlbumArtWithProgress(modifier = Modifier.align(Alignment.CenterEnd))
+
+        AlbumArtWithProgress(modifier = Modifier
+            .align(Alignment.CenterEnd)
+            .offset(x = 110.dp))
     }
 }
 
 @Composable
 fun AlbumArtWithProgress(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier.size(270.dp),
+        modifier = modifier.size(320.dp),
         contentAlignment = Alignment.Center
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
@@ -140,7 +140,6 @@ fun AlbumArtWithProgress(modifier: Modifier = Modifier) {
         }
         Box(
             modifier = Modifier
-                //colocar um pouco de espaço para direita
                 .fillMaxSize()
                 .padding(12.dp)
                 .clip(CircleShape)
@@ -158,18 +157,13 @@ fun LyricsSection() {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = "But you'll never be alone",
-            fontSize = 18.sp,
-            color = Color(0xFF003366)
-        )
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { /*TODO*/ },
             shape = RoundedCornerShape(20.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.7f))
         ) {
-            Text(text = "See All Lyrics", color = Color(0xFF003366))
+            Text(text = "Letra Completa", color = Color(0xFF003366))
         }
     }
 }
