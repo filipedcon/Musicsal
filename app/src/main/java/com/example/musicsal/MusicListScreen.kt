@@ -53,19 +53,21 @@ fun MusicListScreen(modifier: Modifier = Modifier) {
                 )
             )
     ) {
+
         LazyColumn(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
                 Text(
-                    text = "All Songs",
+                    text = "Todas as músicas",
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF003366),
-                    modifier = Modifier.padding(bottom = 16.dp)
+                    modifier = Modifier.padding(top = 24.dp, bottom = 16.dp) // << desceu o título
                 )
             }
+
             items(songs) { song ->
                 SongListItem(song = song)
             }
@@ -87,11 +89,24 @@ fun SongListItem(song: Song) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(text = song.title, fontWeight = FontWeight.Bold, color = Color(0xFF003366))
-                Text(text = song.artist, fontSize = 12.sp, color = Color.Gray)
+                Text(
+                    text = song.title,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF003366)
+                )
+                Text(
+                    text = song.artist,
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
             }
+
             IconButton(onClick = { /* TODO: Play song */ }) {
-                Icon(Icons.Default.PlayArrow, contentDescription = "Play Song", tint = Color(0xFF003366))
+                Icon(
+                    Icons.Default.PlayArrow,
+                    contentDescription = "Play Song",
+                    tint = Color(0xFF003366)
+                )
             }
         }
     }
