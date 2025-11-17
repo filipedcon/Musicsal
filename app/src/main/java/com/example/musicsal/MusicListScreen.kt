@@ -47,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.musicsal.ui.theme.MusicsalTheme
 import java.io.File
+import android.media.MediaPlayer
+import androidx.compose.foundation.clickable
 
 private const val TAG = "MUSIC_DEBUG"
 
@@ -120,7 +122,10 @@ fun scanMusicDirectory(context: Context, path: String = "/sdcard/Music") {
 }
 
 @Composable
-fun MusicListScreen(modifier: Modifier = Modifier) {
+fun MusicListScreen(
+    modifier: Modifier = Modifier,
+    onNavigate: (AppDestinations) -> Unit
+) {
     val context = LocalContext.current
 
     val requiredPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -155,6 +160,8 @@ fun MusicListScreen(modifier: Modifier = Modifier) {
             Log.d(TAG, "Permissão não concedida")
         }
     }
+
+    val mediaPlayer = remember { MediaPlayer() }
 
     Box(
         modifier = modifier
@@ -206,16 +213,43 @@ fun MusicListScreen(modifier: Modifier = Modifier) {
             }
 
             items(songs) { song ->
-                SongListItem(song = song)
+                SongListItem(song = song, onPlay = { ctx, s ->
+                    playSong(ctx, mediaPlayer, s)
+                    onNavigate(AppDestinations.FAVORITES)
+                })
             }
         }
     }
 }
 
+fun playSong(context: Context, mediaPlayer: MediaPlayer, song: Song) {
+    try {
+        mediaPlayer.reset()
+        mediaPlayer.setDataSource(context, song.uri)
+        mediaPlayer.prepareAsync()
+        mediaPlayer.setOnPreparedListener {
+            it.start()
+            Log.d(TAG, "Tocando: ${song.title}")
+        }
+        mediaPlayer.setOnErrorListener { _, what, extra ->
+            Log.e(TAG, "Erro ao tocar música: what=$what extra=$extra")
+            true
+        }
+    } catch (e: Exception) {
+        Log.e(TAG, "Erro em playSong()", e)
+    }
+}
+
+
+
 @Composable
-fun SongListItem(song: Song) {
+fun SongListItem(song: Song, onPlay: (Context, Song) -> Unit) {
+    val context = LocalContext.current
+
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onPlay(context, song) },
         colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.5f))
     ) {
         Row(
@@ -226,21 +260,11 @@ fun SongListItem(song: Song) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(
-                    text = song.title,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF003366)
-                )
-                Text(
-                    text = song.artist,
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
+                Text(song.title, fontWeight = FontWeight.Bold, color = Color(0xFF003366))
+                Text(song.artist, fontSize = 12.sp, color = Color.Gray)
             }
 
-            IconButton(onClick = {
-                Log.d(TAG, "Clicado para tocar ${song.title} -> ${song.uri}")
-            }) {
+            IconButton(onClick = { onPlay(context, song) }) {
                 Icon(
                     Icons.Default.PlayArrow,
                     contentDescription = "Play Song",
@@ -251,17 +275,17 @@ fun SongListItem(song: Song) {
     }
 }
 
+
 @Composable
 private fun SpacerSmall() {
     androidx.compose.foundation.layout.Spacer(modifier = Modifier.padding(6.dp))
 }
 
-@Preview(showBackground = true)
 @Composable
-fun MusicListScreenPreview() {
+fun MusicListScreenPreview(modifier: Modifier, onNavigate: (AppDestinations) -> Unit) {
     MusicsalTheme {
         Surface {
-            MusicListScreen()
+            MusicListScreen(modifier, onNavigate)
         }
     }
 }

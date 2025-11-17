@@ -67,7 +67,8 @@ fun MusicsalApp() {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             when (currentDestination) {
                 AppDestinations.HOME -> MusicListScreen(
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier.padding(innerPadding),
+                    onNavigate = { dest -> currentDestination = dest }
                 )
                 AppDestinations.FAVORITES -> MusicPlayerScreen(
                     modifier = Modifier.padding(innerPadding)
