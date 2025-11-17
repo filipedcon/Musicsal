@@ -41,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -124,9 +123,12 @@ fun scanMusicDirectory(context: Context, path: String = "/sdcard/Music") {
 @Composable
 fun MusicListScreen(
     modifier: Modifier = Modifier,
-    onNavigate: (AppDestinations) -> Unit
+    onNavigate: (AppDestinations) -> Unit,
+    playerViewModel: MusicPlayerViewModel
 ) {
     val context = LocalContext.current
+
+    val mediaPlayer = remember { MediaPlayer() }
 
     val requiredPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         Manifest.permission.READ_MEDIA_AUDIO
@@ -160,8 +162,6 @@ fun MusicListScreen(
             Log.d(TAG, "Permissão não concedida")
         }
     }
-
-    val mediaPlayer = remember { MediaPlayer() }
 
     Box(
         modifier = modifier
@@ -214,6 +214,7 @@ fun MusicListScreen(
 
             items(songs) { song ->
                 SongListItem(song = song, onPlay = { ctx, s ->
+                    playerViewModel.setCurrentSong(s)
                     playSong(ctx, mediaPlayer, s)
                     onNavigate(AppDestinations.FAVORITES)
                 })
@@ -282,10 +283,10 @@ private fun SpacerSmall() {
 }
 
 @Composable
-fun MusicListScreenPreview(modifier: Modifier, onNavigate: (AppDestinations) -> Unit) {
+fun MusicListScreenPreview(modifier: Modifier, onNavigate: (AppDestinations) -> Unit, playerViewModel: MusicPlayerViewModel) {
     MusicsalTheme {
         Surface {
-            MusicListScreen(modifier, onNavigate)
+            MusicListScreen(modifier, onNavigate, playerViewModel)
         }
     }
 }

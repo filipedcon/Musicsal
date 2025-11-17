@@ -23,6 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import com.example.musicsal.ui.theme.MusicsalTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +42,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MusicsalApp() {
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
+
+    val musicPlayerViewModel: MusicPlayerViewModel = viewModel()
 
     NavigationSuiteScaffold(
         navigationSuiteItems = {
@@ -68,15 +72,18 @@ fun MusicsalApp() {
             when (currentDestination) {
                 AppDestinations.HOME -> MusicListScreen(
                     modifier = Modifier.padding(innerPadding),
-                    onNavigate = { dest -> currentDestination = dest }
+                    onNavigate = { dest -> currentDestination = dest },
+                    playerViewModel = musicPlayerViewModel
                 )
                 AppDestinations.FAVORITES -> MusicPlayerScreen(
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier.padding(innerPadding),
+                    playerViewModel = musicPlayerViewModel
                 )
             }
         }
     }
 }
+
 
 enum class AppDestinations(
     val label: String,
