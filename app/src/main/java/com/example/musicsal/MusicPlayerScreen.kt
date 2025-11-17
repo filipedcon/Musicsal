@@ -145,7 +145,7 @@ fun AlbumArtWithProgress(modifier: Modifier = Modifier) {
                 .clip(CircleShape)
                 .background(Color.Gray)
         ) {
-            // You can use an Image composable here for the album art
+            // Arte do album
         }
     }
 }

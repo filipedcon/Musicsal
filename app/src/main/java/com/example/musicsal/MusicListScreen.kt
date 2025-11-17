@@ -123,7 +123,6 @@ fun scanMusicDirectory(context: Context, path: String = "/sdcard/Music") {
 fun MusicListScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    // permission string (Android 13+ READ_MEDIA_AUDIO, else READ_EXTERNAL_STORAGE)
     val requiredPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         Manifest.permission.READ_MEDIA_AUDIO
     } else {
@@ -132,17 +131,14 @@ fun MusicListScreen(modifier: Modifier = Modifier) {
 
     var permissionGranted by remember {
         mutableStateOf(
-            // initial check
             context.checkSelfPermission(requiredPermission) == android.content.pm.PackageManager.PERMISSION_GRANTED
         )
     }
 
-    // launcher to request permission
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         permissionGranted = granted
         Log.d(TAG, "Resultado da permissão: $granted")
         if (granted) {
-            // force a quick scan of /sdcard/Music to ensure MediaStore knows about new files
             scanMusicDirectory(context, "/sdcard/Music")
         }
     }
@@ -152,7 +148,6 @@ fun MusicListScreen(modifier: Modifier = Modifier) {
     LaunchedEffect(permissionGranted) {
         if (permissionGranted) {
             Log.d(TAG, "Permissão concedida -> loading songs")
-            // do a quick scan to improve chances (useful after adb push)
             scanMusicDirectory(context, "/sdcard/Music")
             songs = loadSongsFromDevice(context)
             Log.d(TAG, "Carregando ${songs.size} musicas de MediaStore")
@@ -161,7 +156,6 @@ fun MusicListScreen(modifier: Modifier = Modifier) {
         }
     }
 
-    // UI
     Box(
         modifier = modifier
             .fillMaxSize()
